@@ -8,6 +8,8 @@ Currently:
 
 todo.txt extension is done; hooks load properly
 
+[on hold; waiting for [this](https://github.com/kuzmoyev/google-calendar-simple-api/issues/35)]
+
 need to:
   * create `gcal_index`
   * create gcal extension
@@ -26,24 +28,14 @@ Personal hooks/scripts for calcurse. This integrates [`calcurse`](https://github
 
 This doesn't write back to Google Calendar, its only used to source events.
 
-### CLI reference
-
-`calcurse_load` accepts either a flag to signify pre/post hook, and an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
-
-```
-usage: calcurse_load (--pre-load|--post-save) (gcal|todotxt)...
-
-Load extra data into calcurse
-
-optional arguments:
-  -h, --help   show this help message and exit
-
-required arguments:
-  --pre-load   Execute the preload action for the extension
-  --post-save  Execute the postsave action for the extension
-```
-
 ### Google Calendar Update Process
+
+To setup credentials, see [here](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html).
+
+Put the downloaded credentials in `~/.credentials/google_calendar_credentials.json`, or specify the location with the `--credential-file`.
+
+```
+```
 
 You can either:
 
@@ -72,4 +64,22 @@ If you wanted to disable one of the `todotxt` or `gcal` extension, you could rem
 | (B)      | 4 - 6    |
 | (C)      | 7 - 9    |
 | None     | 0        |
+
+
+### CLI reference
+
+`calcurse_load` accepts either a flag to signify pre/post hook, and an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
+
+```
+usage: calcurse_load (--pre-load|--post-save) (gcal|todotxt)...
+
+Load extra data into calcurse
+
+optional arguments:
+  -h, --help   show this help message and exit
+
+required arguments:
+  --pre-load   Execute the preload action for the extension
+  --post-save  Execute the postsave action for the extension
+```
 

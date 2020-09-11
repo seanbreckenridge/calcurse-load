@@ -16,7 +16,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
-    packages=find_packages(include=["calcurse_load", "calcurse_load.ext", "gcal_index"]),
+    packages=find_packages(),
     test_suite="tests",
     install_requires=["gcsa"],
     python_requires=">=3.7",

@@ -13,7 +13,7 @@ def parse_args():
             "|".join(EXTENSIONS.keys())
         ),
     )
-    required_args = parser.add_argument_group("required arguments")
+    required_args = parser.add_argument_group("required options")
     hook_choice = required_args.add_mutually_exclusive_group(required=True)
     hook_choice.add_argument(
         "--pre-load",
