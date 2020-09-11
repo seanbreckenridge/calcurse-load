@@ -7,6 +7,7 @@
 Currently:
 
 todo.txt extension is done; hooks load properly
+
 need to:
   * create `gcal_index`
   * create gcal extension
@@ -46,10 +47,10 @@ required arguments:
 
 You can either:
 
-* setup a job to run in the background, to update the local index of Google calendar (`gcal_index`)
-* run calcurse as normal. The `pre-load` hook will check if the local index has been updated in the last 6 hours. If it hasn't it re-reads from Google drive.
+* setup a job to run in the background, to update the local index of Google Calendar (`gcal_index`)
+* run calcurse as normal. The `pre-load` hook will check if the local index has been updated in the last 6 hours. If it hasn't it requests out to Google Calendar.
 
-`gcal_index` saves an index of Google calendar events locally as an `ics` file, which is then imported into calcurse, with duplicate events removed.
+`gcal_index` saves an index of Google Calendar events locally as an `ics` file, which is then imported into calcurse, with duplicate events removed.
 
 ## Structure
 
@@ -57,7 +58,7 @@ This installs 2 modules, `gcal_index`, and `calcurse_load`.
 
 The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`, which is what `gcal` hook reads from.
 
-`gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google calendar.
+`gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google Calendar.
 
 The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with `TODOTXT_FILE`)).
 
