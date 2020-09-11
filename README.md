@@ -70,6 +70,6 @@ If you wanted to disable one of the `todotxt` or `gcal` extension, you could rem
 |----------|----------|
 | (A)      | 1 - 3    |
 | (B)      | 4 - 6    |
-| (C)      | 7 - 10   |
+| (C)      | 7 - 9    |
 | None     | 0        |
 
