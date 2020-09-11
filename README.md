@@ -16,11 +16,11 @@ need to:
 
 ---
 
-Personal hooks/scripts for calcurse. This integrates [calcurse](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
+Personal hooks/scripts for calcurse. This integrates [`calcurse`](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
 
 * pre-load:
   * Connects to Google Calendar and pulls down any new events. Saves those to an index and adds those events to `calcurse` appointments.
-  * Replace `calcurse`s todos with my current <http://todotxt.org/>, converting priorities accordingly.
+  * Replace `calcurse`s todos with my current [`todo.txt`](http://todotxt.org/), converting priorities accordingly.
 * post-save
   * If any new todos are added, write those back to my `todo.txt` file.
 
