@@ -1,0 +1,9 @@
+#!/bin/sh
+
+readonly CALCURSE_LOAD_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/calcurse_load"
+
+# create directory if it doesnt exist
+[[ ! -d "$CALCURSE_LOAD_DATA" ]] && mkdir -vp "$CALCURSE_LOAD_DATA"
+
+# gcal pre-load hook reads any json files in ~/.local/share/calcurse_load/
+python3 -m gcal_index --email <your_email> --credential-file ~/.credentials/<credential>.json > "${CALCURSE_LOAD_DATA}/calendar.json"

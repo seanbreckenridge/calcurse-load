@@ -6,22 +6,21 @@
 
 Currently:
 
-todo.txt extension is done; hooks load properly
+* todo.txt extension is done; hooks load properly
+* gcal_index exports google calendar data
 
 [on hold; waiting for [this](https://github.com/kuzmoyev/google-calendar-simple-api/issues/35)]
 
 need to:
-  * create `gcal_index`
-  * create gcal extension
-  * automatically install hooks with setup.py
-  * document stuff a bit more
+  * create gcal extension to convert JSON into calcurse events
+  * document stuff a bit more, how to install
 
 ---
 
 Personal hooks/scripts for calcurse. This integrates [`calcurse`](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
 
 * pre-load:
-  * Connects to Google Calendar and pulls down any new events. Saves those to an index and adds those events to `calcurse` appointments.
+  * Looks at the locally indexed Google Calendar JSON dump, adds events as `calcurse` appointments.
   * Replace `calcurse`s todos with my current [`todo.txt`](http://todotxt.org/), converting priorities accordingly.
 * post-save
   * If any new todos are added, write those back to my `todo.txt` file.
@@ -30,19 +29,33 @@ This doesn't write back to Google Calendar, its only used to source events.
 
 ### Google Calendar Update Process
 
+`gcal_index` saves an index of Google Calendar events locally as a JSON file, which is then imported into calcurse, with duplicate events removed.
+
 To setup credentials, see [here](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html).
 
-Put the downloaded credentials in `~/.credentials/google_calendar_credentials.json`, or specify the location with the `--credential-file`.
+Put the downloaded credentials in `~/.credentials/`, or specify the location with the `--credential-file`. I'd recommend wrapping in a script, and then setting up a job to run in the background, to update the local JSON index of Google Calendar events (or just update it before you launch calcurse).
 
 ```
+usage: gcal_index [-h] --email EMAIL [--credential-file CREDENTIAL_FILE]
+                  [--end-days END_DAYS]
+
+Export Google Calendar events
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --email EMAIL         Google Email to export
+  --credential-file CREDENTIAL_FILE
+                        Google credential file
+  --end-days END_DAYS   Specify how many days into the future to get events
+                        for (if we went forever, repeating events would be
+                        there in 2050) [default: 90]
 ```
 
-You can either:
+Prints the JSON dump to STDOUT; example:
 
-* setup a job to run in the background, to update the local index of Google Calendar (`gcal_index`)
-* run calcurse as normal. The `pre-load` hook will check if the local index has been updated in the last 6 hours. If it hasn't it requests out to Google Calendar.
+`python3 -m gcal_index --email <your_email> --credential-file ~/.credentials/<credential>.json`
 
-`gcal_index` saves an index of Google Calendar events locally as an `ics` file, which is then imported into calcurse, with duplicate events removed.
+For an example script one might put under cron, see [`example_update_google_cal`](./example_update_google_cal)
 
 ## Structure
 
@@ -66,7 +79,9 @@ If you wanted to disable one of the `todotxt` or `gcal` extension, you could rem
 | None     | 0        |
 
 
-### CLI reference
+### calcurse_load reference
+
+Probably won't use `calcurse_load` directly except for testing, the `pre-load`/`post-save` hooks automatically call out to the corresponding scripts.
 
 `calcurse_load` accepts either a flag to signify pre/post hook, and an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
 

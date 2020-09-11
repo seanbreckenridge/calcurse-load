@@ -18,12 +18,13 @@ setup(
     license="MIT",
     packages=find_packages(),
     test_suite="tests",
-    install_requires=["gcsa"],
+    install_requires=["gcsa", "lxml", "cssselect"],
     python_requires=">=3.7",
     keywords="calendar todo",
     entry_points={
         "console_scripts": [
             "calcurse_load = calcurse_load.__main__:cli",
+            "gcal_index = gcal_index.__main__:main",
         ]
     },
     classifiers=[
