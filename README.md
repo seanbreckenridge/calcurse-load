@@ -100,3 +100,5 @@ required arguments:
   --post-save  Execute the postsave action for the extension
 ```
 
+If you want to use this for other purposes; I defined a `Extension` base class in `calcurse_load.ext.abstract`, you'd just have to add a subclass in a file there, and then add it to the dictionary in `calcurse_load.ext`
+
