@@ -8,6 +8,7 @@ from functools import lru_cache
 from dataclasses import dataclass
 
 from .abstract import Extension
+from .utils import yield_lines
 
 # parses, converts and reconstructs the TodoTxtTodo format
 @dataclass
@@ -182,12 +183,3 @@ class todotxt_ext(Extension):
     def _read_calcurse_file(path: Path) -> Iterator["CalcurseTodo"]:
         for line in yield_lines(path):
             yield CalcurseTodo.parse_line(line)
-
-
-def yield_lines(path: Path) -> Iterator[str]:
-    """Returns non empty lines from a file"""
-    with path.open("r") as pf:
-        for line in pf:
-            lstr = line.strip()
-            if len(lstr) > 0:
-                yield lstr

@@ -1,8 +1,8 @@
 import sys
 import argparse
 
-from . import EXTENSIONS
-from .calcurse import eval_shell_configuration, get_configuration
+from .ext import EXTENSIONS
+from .calcurse import get_configuration
 
 
 def parse_args():

@@ -3,11 +3,10 @@ import os
 import json
 import argparse
 from itertools import chain
-from dataclasses import dataclass
-from typing import List, Iterator, Any, Dict, Optional
+from typing import Iterator, Any, Dict, Optional
 from datetime import date, timedelta
 
-from lxml import etree, cssselect, html
+from lxml import html
 from gcsa.event import Event
 from gcsa.google_calendar import GoogleCalendar
 
@@ -21,7 +20,11 @@ ATTENDEE_KEYS = ["email", "response_status"]
 
 
 def create_calendar(email: str, credential_file: str) -> GoogleCalendar:
-    return GoogleCalendar(email, credential_file, token_path=os.path.join(os.environ["HOME"], ".credentials", f"{email}.pickle"))
+    return GoogleCalendar(
+        email,
+        credential_file,
+        token_path=os.path.join(os.environ["HOME"], ".credentials", f"{email}.pickle"),
+    )
 
 
 def n_days(days: int):
@@ -32,11 +35,12 @@ def n_days(days: int):
 def parse_args():
     parser = argparse.ArgumentParser(description="Export Google Calendar events")
     required = parser.add_argument_group("required options")
-    parser.add_argument("--email", help="Google Email to export", required=True)
-    parser.add_argument(
+    required.add_argument("--email", help="Google Email to export", required=True)
+    required.add_argument(
         "--credential-file",
         help="Google credential file",
         default=default_credential_file,
+        required=True,
     )
     parser.add_argument(
         "--end-days",
@@ -65,8 +69,8 @@ def _parse_html_description(htmlstr: Optional[str]) -> Json:
 def event_to_dict(e: Event) -> Json:
     return {
         "summary": e.summary,
-        "start": e.start.timestamp(),
-        "end": e.end.timestamp(),
+        "start": int(e.start.timestamp()),
+        "end": int(e.end.timestamp()),
         "event_id": e.event_id,
         "description": _parse_html_description(e.description),
         "location": e.location,
@@ -74,6 +78,7 @@ def event_to_dict(e: Event) -> Json:
         "attendees": [
             {key: getattr(att, key) for key in ATTENDEE_KEYS} for att in e.attendees
         ],
+        "event_link": e.other.get("htmlLink"),
     }
 
 
