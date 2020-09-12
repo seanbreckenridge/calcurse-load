@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # to disable this file, rename it to todotxt.disabled
 
 case "$1" in
