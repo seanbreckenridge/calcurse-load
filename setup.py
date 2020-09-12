@@ -12,7 +12,7 @@ setup(
     url="https://github.com/seanbreckenridge/calcurse_load",
     author="Sean Breckenridge",
     author_email="seanbrecke@gmail.com",
-    description="""Hooks to for calcurse to integrate with external sources (todo.txt and google calendar built-in)""",
+    description="""Sources events for calcurse from Google Calendar and todo.txt""",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license="MIT",
