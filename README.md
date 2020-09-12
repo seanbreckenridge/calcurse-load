@@ -9,8 +9,6 @@ Currently:
 * todo.txt extension is done; hooks load properly
 * gcal_index exports google calendar data
 
-[on hold; waiting for [this](https://github.com/kuzmoyev/google-calendar-simple-api/issues/35)]
-
 need to:
   * create gcal extension to convert JSON into calcurse events
   * document stuff a bit more, how to install
