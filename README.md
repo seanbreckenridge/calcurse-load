@@ -29,9 +29,9 @@ This installs 2 python scripts/modules, `gcal_index`, and `calcurse_load`.
 The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`. The `gcal` calcurse hook tries to read any JSON files in that directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
 
 - Loads the calcurse appointments file
-- Removing any Google Calendar events (which are tagged with `[gcal]`)
+- Removes any Google Calendar events (which are tagged with `[gcal]`)
 - Generates Google Calendar events from the JSON
-- Writes back to the appointments file.
+- Adds the newly created events and writes back to the appointments file.
 
 The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with `TODOTXT_FILE`)).
 
@@ -39,7 +39,7 @@ If you wanted to disable one of the `todotxt` or `gcal` extension, you could rem
 
 ### Google Calendar Update Process
 
-`gcal_index` saves an index of Google Calendar events locally as a JSON file, which is then imported into calcurse, with duplicate events removed.
+`gcal_index` saves an index of Google Calendar events for a Google Account locally as a JSON file.
 
 To setup credentials, see [here](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html).
 

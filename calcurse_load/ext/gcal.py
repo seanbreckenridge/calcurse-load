@@ -15,8 +15,6 @@ from tzlocal import get_localzone
 tz = get_localzone()
 
 # loads any JSON files in ~/.local/data/calcurse_load/*.json,
-# removes
-# extracts event data from them and removes duplicates
 
 Json = Dict[str, Any]
 
