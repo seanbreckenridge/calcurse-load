@@ -26,7 +26,12 @@ This installs 2 python scripts/modules, `gcal_index`, and `calcurse_load`.
 
 `gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google Calendar.
 
-The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`. The `gcal` calcurse hook tries to read any JSON files in that directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it: loads the calcurse appointments file, removing any Google Calendar events (which are tagged with the `[gcal]`), generates Google Calendar events from the JSON, and writes back to the appointments file.
+The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`. The `gcal` calcurse hook tries to read any JSON files in that directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
+
+- Loads the calcurse appointments file
+- Removing any Google Calendar events (which are tagged with `[gcal]`)
+- Generates Google Calendar events from the JSON
+- Writes back to the appointments file.
 
 The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with `TODOTXT_FILE`)).
 
@@ -38,7 +43,9 @@ If you wanted to disable one of the `todotxt` or `gcal` extension, you could rem
 
 To setup credentials, see [here](https://google-calendar-simple-api.readthedocs.io/en/latest/getting_started.html).
 
-Put the downloaded credentials in `~/.credentials/`, or specify the location with the `--credential-file`. I'd recommend wrapping in a script, and then setting up a job to run in the background, to update the local JSON index of Google Calendar events (or just update it before you launch calcurse).
+Put the downloaded credentials in `~/.credentials/`, and specify the location with the `--credential-file`. I'd recommend wrapping in a script, and then setting up a job to run in the background, to update the local JSON index of Google Calendar events.
+
+Its possible to put the command to update the local JSON index in your `pre-load` hook as well, before the call to `python3 -m calcurse_load`, but that would cause some noticable lag on calcurse start-up.
 
 ```
 usage: gcal_index [-h] --email EMAIL --credential-file CREDENTIAL_FILE
