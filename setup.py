@@ -18,7 +18,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     test_suite="tests",
-    install_requires=["gcsa", "lxml", "cssselect", "tzlocal"],
+    install_requires=["gcsa>=0.4.0", "lxml", "cssselect", "tzlocal"],
     python_requires=">=3.7",
     keywords="calendar todo",
     entry_points={
