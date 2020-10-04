@@ -92,7 +92,7 @@ class gcal_ext(Extension):
             if not is_google_event(apt):
                 yield apt
 
-    def pre_load(self):
+    def pre_load(self) -> None:
         """
         - read in and filter out google events
         - create google events from JSON
@@ -110,5 +110,5 @@ class gcal_ext(Extension):
                 cal_apts.write(event)
                 cal_apts.write("\n")
 
-    def post_save(self):
+    def post_save(self) -> None:
         warnings.warn("gcal doesn't have a post-save hook!")

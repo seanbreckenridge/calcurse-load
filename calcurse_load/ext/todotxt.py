@@ -16,7 +16,7 @@ class TodoTxtTodo:
     priority: str
     text: str
 
-    def __hash__(self) -> str:
+    def __hash__(self) -> int:
         return hash(self.text)
 
     def convert(self) -> "CalcurseTodo":
@@ -45,13 +45,13 @@ class TodoTxtTodo:
         >>> TodoTxtTodo.parse_line("not important")
         TodoTxtTodo(priority='', text='not important')
         """
-        prio, text = re.match(r"^(\([ABC]\))?(.*)", line.strip()).groups()
+        prio, text = re.match(r"^(\([ABC]\))?(.*)", line.strip()).groups()  # type: ignore[union-attr]
         if prio is None:
             prio = ""
         return cls(priority=prio, text=text.strip())
 
     @property
-    def line(self):
+    def line(self) -> str:
         """Convert the todotxt data back to a line"""
         if self.priority == "":
             return self.text
@@ -65,7 +65,7 @@ class CalcurseTodo:
     priority: int
     text: str
 
-    def __hash__(self) -> str:
+    def __hash__(self) -> int:
         return hash(self.text)
 
     def convert(self) -> "TodoTxtTodo":
@@ -94,16 +94,16 @@ class CalcurseTodo:
         >>> CalcurseTodo.parse_line('[1] most important todo')
         CalcurseTodo(priority=1, text='most important todo')
         """
-        prio, text = re.match(r"^(\[\d+\])(.*)", line.strip()).groups()
+        prio, text = re.match(r"^(\[\d+\])(.*)", line.strip()).groups()  # type: ignore[union-attr]
         return cls(priority=int(prio.strip("[]")), text=text.strip())
 
     @property
-    def line(self):
+    def line(self) -> str:
         return f"[{self.priority}] {self.text}"
 
 
 class todotxt_ext(Extension):
-    def pre_load(self):
+    def pre_load(self) -> None:
         """
         Replace the calcurse todos with my todo.txt file contents
         """
@@ -121,7 +121,7 @@ class todotxt_ext(Extension):
             for cl in calcurse_todos:
                 calcurse_todof.write("{}\n".format(cl.line))
 
-    def post_save(self):
+    def post_save(self) -> None:
         """
         After calcurse has saved, read the calcurse todo file, and compare that with my todo.txt file
         If there are any items in calcurse that I added that aren't in my todo.txt, add it to my todo.txt file
@@ -176,10 +176,12 @@ class todotxt_ext(Extension):
                     return Path(path_str)
         return None
 
+    @staticmethod
     def _read_todotxt_file(path: Path) -> Iterator["TodoTxtTodo"]:
         for line in yield_lines(path):
             yield TodoTxtTodo.parse_line(line)
 
+    @staticmethod
     def _read_calcurse_file(path: Path) -> Iterator["CalcurseTodo"]:
         for line in yield_lines(path):
             yield CalcurseTodo.parse_line(line)

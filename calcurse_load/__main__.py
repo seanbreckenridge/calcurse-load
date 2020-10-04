@@ -4,8 +4,10 @@ import argparse
 from .ext import EXTENSIONS
 from .calcurse import get_configuration
 
+from typing import Tuple, List, Callable
 
-def parse_args():
+
+def parse_args() -> Tuple[argparse.Namespace, List[str]]:
     parser = argparse.ArgumentParser(
         description="Load extra data into calcurse",
         # manually write out usage
@@ -39,7 +41,7 @@ def parse_args():
     return args, extensions
 
 
-def cli():
+def cli() -> None:
     args, extensions = parse_args()
     configuration = get_configuration()
     if len(extensions) == 0:
@@ -51,7 +53,7 @@ def cli():
         )
         sys.exit(1)
     for ext in extensions:
-        ext_class = EXTENSIONS[ext]
+        ext_class: Callable = EXTENSIONS[ext]  # type: ignore[type-arg]
         load_hook = ext_class(config=configuration)
         if args.pre_load:
             load_hook.pre_load()

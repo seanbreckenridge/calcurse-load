@@ -3,12 +3,12 @@ import os
 import json
 import argparse
 from itertools import chain
-from typing import Iterator, Any, Dict, Optional
+from typing import Iterator, Any, Dict, Optional, Union, List
 from datetime import date, timedelta
 
-from lxml import html
-from gcsa.event import Event
-from gcsa.google_calendar import GoogleCalendar
+from lxml import html  # type: ignore[import]
+from gcsa.event import Event  # type: ignore[import]
+from gcsa.google_calendar import GoogleCalendar  # type: ignore[import]
 
 default_credential_file = os.path.join(
     os.environ["HOME"], ".credentials", "credentials.json"
@@ -27,12 +27,12 @@ def create_calendar(email: str, credential_file: str) -> GoogleCalendar:
     )
 
 
-def n_days(days: int):
+def n_days(days: int) -> date:
     """Get the date, for n days into the future"""
     return date.today() + timedelta(days=days)
 
 
-def parse_args():
+def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Export Google Calendar events")
     required = parser.add_argument_group("required options")
     required.add_argument("--email", help="Google Email to export", required=True)
@@ -51,10 +51,10 @@ def parse_args():
 
 
 def _parse_html_description(htmlstr: Optional[str]) -> Json:
-    data = {"text": None, "links": []}
+    data: Dict[str, Union[str, None, List[str]]] = {"text": None, "links": []}
     if htmlstr is None:
         return data
-    root = html.fromstring(htmlstr)
+    root: html.HtmlElement = html.fromstring(htmlstr)
     # filter all 'a' elements, get the link values, chain them together and remove items with no links
     data["links"] = list(
         filter(
@@ -62,7 +62,8 @@ def _parse_html_description(htmlstr: Optional[str]) -> Json:
             chain(*[link.values() for link in root.cssselect("a")]),
         )
     )
-    data["text"] = "\n".join(map(str.strip, root.itertext()))
+    text_lines: List[str] = [t.strip() for t in root.itertext() if t is not None]
+    data["text"] = "\n".join(text_lines)
     return data
 
 
@@ -83,12 +84,12 @@ def event_to_dict(e: Event) -> Json:
 
 
 # get events from 1900 to now + args.end_days
-def get_events(args) -> Iterator[Event]:
+def get_events(args: argparse.Namespace) -> Iterator[Event]:
     cal = create_calendar(args.email, args.credential_file)
     yield from cal.get_events(date(1900, 1, 1), n_days(args.end_days))
 
 
-def main():
+def main() -> None:
     args = parse_args()
     if not os.path.exists(args.credential_file):
         print(
