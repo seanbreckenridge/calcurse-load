@@ -2,11 +2,11 @@
 
 Personal hooks/scripts for calcurse. This integrates [`calcurse`](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
 
-* pre-load:
-  * Looks at the locally indexed Google Calendar JSON dump, adds events as `calcurse` appointments; adds summary/HTML links as appointment notes.
-  * Replace `calcurse`s todos with my current [`todo.txt`](http://todotxt.org/), converting priorities accordingly.
-* post-save
-  * If any new todos are added, write those back to my `todo.txt` file.
+- pre-load:
+  - Looks at the locally indexed Google Calendar JSON dump, adds events as `calcurse` appointments; adds summary/HTML links as appointment notes.
+  - Replace `calcurse`s todos with my current [`todo.txt`](http://todotxt.org/), converting priorities accordingly.
+- post-save
+  - If any new todos are added, write those back to my `todo.txt` file.
 
 This doesn't write back to Google Calendar, its only used to source events.
 
@@ -74,12 +74,11 @@ For an example script one might put under cron, see [`example_update_google_cal`
 ### Todo.txt Priority Conversion
 
 | Todo.txt | Calcurse |
-|----------|----------|
+| -------- | -------- |
 | (A)      | 1 - 3    |
 | (B)      | 4 - 6    |
 | (C)      | 7 - 9    |
 | None     | 0        |
-
 
 ### calcurse_load reference
 
@@ -101,4 +100,3 @@ required arguments:
 ```
 
 If you want to use this for other purposes; I defined a `Extension` base class in `calcurse_load.ext.abstract`, you'd just have to add a subclass in a file there, and then add it to the dictionary in `calcurse_load.ext`
-
