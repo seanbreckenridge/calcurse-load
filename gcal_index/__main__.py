@@ -22,7 +22,7 @@ ATTENDEE_KEYS = ["email", "response_status"]
 def create_calendar(email: str, credential_file: str) -> GoogleCalendar:
     return GoogleCalendar(
         email,
-        credential_file,
+        credentials_path=credential_file,
         token_path=os.path.join(os.environ["HOME"], ".credentials", f"{email}.pickle"),
     )
 
