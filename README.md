@@ -45,7 +45,7 @@ To setup credentials, see [here](https://google-calendar-simple-api.readthedocs.
 
 Put the downloaded credentials in `~/.credentials/`, and specify the location with the `--credential-file`. I'd recommend wrapping in a script, and then setting up a job to run in the background, to update the local JSON index of Google Calendar events.
 
-Its possible to put the command to update the local JSON index in your `pre-load` hook as well, before the call to `python3 -m calcurse_load`, but that would cause some noticable lag on calcurse start-up.
+Its possible to put the command to update the local JSON index in your `pre-load` hook as well, before the call to `python3 -m calcurse_load`, but that would cause some noticeable lag on calcurse start-up.
 
 ```
 usage: gcal_index [-h] --email EMAIL --credential-file CREDENTIAL_FILE
