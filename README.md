@@ -26,14 +26,20 @@ This installs 2 python scripts/modules, `gcal_index`, and `calcurse_load`.
 
 `gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google Calendar.
 
-The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`. The `gcal` calcurse hook tries to read any JSON files in that directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
+The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`.
+
+---
+
+The `gcal` calcurse hook tries to read any JSON files in the calcurse_load directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
 
 - Loads the calcurse appointments file
 - Removes any Google Calendar events (which are tagged with `[gcal]`)
 - Generates Google Calendar events from the JSON
 - Adds the newly created events and writes back to the appointments file.
 
-The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with `TODOTXT_FILE`)).
+---
+
+The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with the `TODOTXT_FILE` environment variable)).
 
 If you wanted to disable one of the `todotxt` or `gcal` extension, you could remove or rename the corresponding scripts in the `hooks` directory.
 
