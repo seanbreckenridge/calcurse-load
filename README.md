@@ -30,7 +30,7 @@ The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.lo
 
 ---
 
-The `gcal` calcurse hook tries to read any JSON files in the calcurse_load directory for Google Calendar events. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
+The `gcal` calcurse hook tries to read any `gcal_index`-created JSON files in the `$XDG_DATA_HOME/calcurse_load/gcal/` directory. If theres description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
 
 - Loads the calcurse appointments file
 - Removes any Google Calendar events (which are tagged with `[gcal]`)
