@@ -155,13 +155,15 @@ class todotxt_ext(Extension):
     def _find_todo_file() -> Optional[Path]:
         """
         Resolution order:
-            - TODOTXT_FILE
-            - XDG_CONFIG/todo/todo.txt
+            - $TODOTXT_FILE
+            - $TODO_DIR/todo.txt
+            - $XDG_CONFIG/todo/todo.txt
             - ~/.config/todo/todo.txt
             - ~/.todo/todo.txt
         """
         for path_str in [
             os.environ.get("TODOTXT_FILE"),
+            os.path.join(os.environ.get("TODO_DIR", "/NO_TODO_DIR_SET"), "todo.txt"),
             os.path.join(
                 os.environ.get(
                     "XDG_CONFIG_HOME", os.path.join(os.environ["HOME"], ".config")
