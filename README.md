@@ -26,7 +26,16 @@ This installs 2 python scripts/modules, `gcal_index`, and `calcurse_load`.
 
 `gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google Calendar.
 
-The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`.
+The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). If you want to override that for some reason, this allows you to set the `$CALCURSE_DIR` environment variable. Thats not something `calcurse` recognizes, but you can set `$CALCURSE_DIR` in your shell config, then wrap calcurse in a script to use a custom data directory, like:
+
+```
+#!/bin/sh
+exec calcurse -D "$CALCURSE_DIR" -C ~/.config/calcurse "$@"
+```
+
+Then just call that wrapper script instead of calcurse (or `alias calcurse=calcurse_wrapper`)
+
+In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`.
 
 ---
 

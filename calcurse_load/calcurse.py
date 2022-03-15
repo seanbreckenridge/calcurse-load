@@ -18,6 +18,8 @@ def get_configuration() -> Configuration:
         )
     )
     calcurse_dir: Path = xdg_data / "calcurse"
+    if "CALCURSE_DIR" in os.environ:
+        calcurse_dir = Path(os.environ["CALCURSE_DIR"])
     calcurse_load_dir: Path = xdg_data / "calcurse_load"
     if not calcurse_dir.exists():
         warnings.warn(
