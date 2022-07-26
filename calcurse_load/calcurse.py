@@ -14,7 +14,7 @@ class Configuration(NamedTuple):
 def get_configuration() -> Configuration:
     xdg_data: Path = Path(
         os.environ.get(
-            "XDG_DATA_HOME", os.path.join(os.environ["HOME"], ".local", "share")
+            "XDG_DATA_HOME", os.path.join(os.path.expanduser("~"), ".local", "share")
         )
     )
     calcurse_dir: Path = xdg_data / "calcurse"

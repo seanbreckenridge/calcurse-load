@@ -10,9 +10,9 @@ from lxml import html  # type: ignore[import]
 from gcsa.event import Event  # type: ignore[import]
 from gcsa.google_calendar import GoogleCalendar  # type: ignore[import]
 
-default_credential_file = os.path.join(
-    os.environ["HOME"], ".credentials", "credentials.json"
-)
+home = os.path.expanduser("~")
+
+default_credential_file = os.path.join(home, ".credentials", "credentials.json")
 
 Json = Dict[str, Any]
 
@@ -23,7 +23,7 @@ def create_calendar(email: str, credential_file: str) -> GoogleCalendar:
     return GoogleCalendar(
         email,
         credentials_path=credential_file,
-        token_path=os.path.join(os.environ["HOME"], ".credentials", f"{email}.pickle"),
+        token_path=os.path.join(home, ".credentials", f"{email}.pickle"),
     )
 
 

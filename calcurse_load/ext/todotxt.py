@@ -166,12 +166,12 @@ class todotxt_ext(Extension):
             os.path.join(os.environ.get("TODO_DIR", "/NO_TODO_DIR_SET"), "todo.txt"),
             os.path.join(
                 os.environ.get(
-                    "XDG_CONFIG_HOME", os.path.join(os.environ["HOME"], ".config")
+                    "XDG_CONFIG_HOME", os.path.join(os.path.expanduser("~"), ".config")
                 ),
                 "todo",
                 "todo.txt",
             ),
-            os.path.join(os.environ["HOME"], ".todo", "todo.txt"),
+            os.path.join(os.path.expanduser("~"), ".todo", "todo.txt"),
         ]:
             if path_str is not None:
                 if os.path.exists(path_str):
