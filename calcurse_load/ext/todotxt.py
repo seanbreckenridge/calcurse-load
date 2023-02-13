@@ -10,6 +10,7 @@ from dataclasses import dataclass
 from .abstract import Extension
 from .utils import yield_lines
 
+
 # parses, converts and reconstructs the TodoTxtTodo format
 @dataclass
 class TodoTxtTodo:

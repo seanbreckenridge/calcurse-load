@@ -74,7 +74,9 @@ def is_google_event(appointment_line: "CalcurseApt") -> bool:
 
 class gcal_ext(Extension):
     def load_json_events(self) -> Iterator[Json]:
-        json_files: List[str] = glob.glob(str(self.config.calcurse_load_dir / "gcal" / "*.json"))
+        json_files: List[str] = glob.glob(
+            str(self.config.calcurse_load_dir / "gcal" / "*.json")
+        )
         if not json_files:
             warnings.warn(
                 "No json files found in '{}'".format(str(self.config.calcurse_load_dir))
