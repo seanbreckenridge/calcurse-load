@@ -1,0 +1,5 @@
+gcsa>=0.4.0
+lxml
+cssselect
+tzlocal
+click

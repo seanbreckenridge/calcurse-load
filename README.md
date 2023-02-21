@@ -63,21 +63,19 @@ Put the downloaded credentials in `~/.credentials/`, and specify the location wi
 Its possible to put the command to update the local JSON index in your `pre-load` hook as well, before the call to `python3 -m calcurse_load`, but that would cause some noticeable lag on calcurse start-up.
 
 ```
-usage: gcal_index [-h] --email EMAIL --credential-file CREDENTIAL_FILE
-                  [--end-days END_DAYS]
+Usage: python -m gcal_index [OPTIONS]
 
-Export Google Calendar events
+  Export Google Calendar events
 
-optional arguments:
-  -h, --help            show this help message and exit
-  --end-days END_DAYS   Specify how many days into the future to get
-                        events for (if we went forever, repeating
-                        events would be there in 2050) [default: 90]
-
-required options:
-  --email EMAIL         Google Email to export
-  --credential-file CREDENTIAL_FILE
-                        Google credential file
+Options:
+  --email TEXT            Google Email to export  [required]
+  --credential-file TEXT  Google credential file  [required]
+  --end-days INTEGER      Specify how many days into the future to get events
+                          for (if we went forever, repeating events would be
+                          there in 2050)  [default: 90]
+  --calendar TEXT         Specify which calendar to export from  [default:
+                          primary]
+  --help                  Show this message and exit.
 ```
 
 Prints the JSON dump to STDOUT; example:

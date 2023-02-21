@@ -1,5 +1,8 @@
 import io
 from setuptools import setup, find_packages
+from pathlib import Path
+
+reqs = Path("requirements.txt").read_text().splitlines()
 
 
 # Use the README.md content for the long description:
@@ -18,7 +21,7 @@ setup(
     license="MIT",
     packages=find_packages(),
     test_suite="tests",
-    install_requires=["gcsa>=0.4.0", "lxml", "cssselect", "tzlocal"],
+    install_requires=reqs,
     python_requires=">=3.7",
     keywords="calendar todo",
     entry_points={
