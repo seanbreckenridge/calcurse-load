@@ -1,3 +1,5 @@
+from __future__ import annotations
+import sys
 import json
 import glob
 import hashlib
@@ -5,7 +7,7 @@ import warnings
 from functools import partial
 from pathlib import Path
 from datetime import datetime
-from typing import Any, Dict, List, Iterator
+from typing import Any, Dict, List, Iterator, Optional
 
 from .abstract import Extension
 from .utils import yield_lines
@@ -26,10 +28,12 @@ def pad(i: int) -> str:
     return str(i).zfill(2)
 
 
-def create_calcurse_timestamp(epochtime: int) -> str:
+def create_calcurse_timestamp(epochtime: Optional[int]) -> str:
     """
     Create a string that represents the time in Calcurses timestamp format
     """
+    if epochtime is None:
+        return ""
     dt: datetime = tz.localize(datetime.fromtimestamp(epochtime))
     return f"{pad(dt.month)}/{pad(dt.day)}/{dt.year} @ {pad(dt.hour)}:{pad(dt.minute)}"
 
@@ -57,15 +61,24 @@ def create_calcurse_note(event_data: Json, notes_dir: Path) -> str:
     return sha
 
 
-def create_calcurse_event(event_data: Json, notes_dir: Path) -> "CalcurseApt":
+def create_calcurse_event(event_data: Json, notes_dir: Path) -> Optional[CalcurseApt]:
     """
     Takes the exported Google Calendar info, and creates
     a corresponding Calcurse 'apts' line, and note
     """
     note_hash: str = create_calcurse_note(event_data, notes_dir)
+    if event_data["start"] is None:
+        # TODO: use logger instead?
+        print(
+            f"Event {event_data} has no start time", file=sys.stderr
+        )
+        return None
     start_str = create_calcurse_timestamp(event_data["start"])
     end_str = create_calcurse_timestamp(event_data["end"])
-    return f"{start_str} -> {end_str}>{note_hash} |{event_data['summary']} [gcal]"
+    if end_str == "":
+        return f"{start_str} -> {start_str}>{note_hash} |{event_data['summary']} [gcal]"
+    else:
+        return f"{start_str} -> {end_str}>{note_hash} |{event_data['summary']} [gcal]"
 
 
 def is_google_event(appointment_line: "CalcurseApt") -> bool:
@@ -104,9 +117,10 @@ class gcal_ext(Extension):
         calcurse_func = partial(
             create_calcurse_event, notes_dir=self.config.calcurse_dir / "notes"
         )
-        google_apts: List[CalcurseApt] = list(
-            map(calcurse_func, self.load_json_events())
-        )
+        google_apts: List[CalcurseApt] = [
+            ev for ev in map(calcurse_func, self.load_json_events()) if ev is not None
+        ]
+        print(f"Writing {len(google_apts)} gcal events to calcurse appointments file", file=sys.stderr)
         with (self.config.calcurse_dir / "apts").open("w") as cal_apts:
             for event in filtered_apts + google_apts:
                 cal_apts.write(event)
