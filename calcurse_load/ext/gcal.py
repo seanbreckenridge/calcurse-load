@@ -12,10 +12,6 @@ from typing import Any, Dict, List, Iterator, Optional
 from .abstract import Extension
 from .utils import yield_lines
 
-from tzlocal import get_localzone
-
-tz = get_localzone()
-
 # loads any JSON files in ~/.local/data/calcurse_load/*.json,
 
 Json = Dict[str, Any]
@@ -34,7 +30,9 @@ def create_calcurse_timestamp(epochtime: Optional[int]) -> str:
     """
     if epochtime is None:
         return ""
-    dt: datetime = tz.localize(datetime.fromtimestamp(epochtime))
+    dt = datetime.fromtimestamp(epochtime)
+    # localize to the current timezone
+    dt = dt.astimezone()
     return f"{pad(dt.month)}/{pad(dt.day)}/{dt.year} @ {pad(dt.hour)}:{pad(dt.minute)}"
 
 
