@@ -23,7 +23,7 @@ def get_configuration() -> Configuration:
     calcurse_load_dir: Path = xdg_data / "calcurse_load"
     if not calcurse_dir.exists():
         warnings.warn(
-            "Calcurse data directory at {} doesnt exist.".format(str(calcurse_dir))
+            "Calcurse data directory at {} doesn't exist.".format(str(calcurse_dir))
         )
     if not calcurse_load_dir.exists():
         os.makedirs(str(calcurse_load_dir))

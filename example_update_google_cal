@@ -3,7 +3,7 @@
 readonly CALCURSE_LOAD_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/calcurse_load"
 readonly GCAL_DIR="${CALCURSE_LOAD_DATA}/gcal"
 
-# create directory if it doesnt exist
+# create directory if it doesn't exist
 [[ ! -d "$GCAL_DIR" ]] && mkdir -vp "$GCAL_DIR"
 
 # gcal pre-load hook reads any json files in ~/.local/share/calcurse_load/
