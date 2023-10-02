@@ -1,6 +1,7 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
-CALCURSE_CONFIG="${XDG_CONFIG_HOME:-$HOME/.config}/calcurse"
+THIS_DIR="$(realpath "$(dirname "${BASH_SOURCE[0]}")")"
+cd "${THIS_DIR}" || exit $?
 
 # for each .enabled extension file, run postsave
-find "$CALCURSE_CONFIG" -type f -name "*.enabled" -exec {} postsave \;
+find . -type f -name "*.enabled" -exec {} postsave \;
