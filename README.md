@@ -26,16 +26,14 @@ This installs 2 python scripts/modules, `gcal_index`, and `calcurse_load`.
 
 `gcal_index` has nothing to do with calcurse inherently, it could be used on its own to export all your current data from Google Calendar.
 
-The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). If you want to override that for some reason, this allows you to set the `$CALCURSE_DIR` environment variable. That's not something `calcurse` recognizes, but you can set `$CALCURSE_DIR` in your shell config, then wrap calcurse in a script to use a custom data directory, like:
+The data for calcurse is typically kept in `$XDG_DATA_HOME/calcurse` (`$HOME/.local/share/calcurse`). If you want to override that for some reason, this allows you to set the `$CALCURSE_DIR` environment variable. That's not something `calcurse` recognizes, but you could setup an alias:
 
+```bash
+export CALCURSE_DIR="$HOME/Documents/calcurse"
+alias calcurse='calcurse --datadir "$CALCURSE_DIR" --confdir ~/.config/calcurse "$@"'
 ```
-#!/bin/sh
-exec calcurse -D "$CALCURSE_DIR" -C ~/.config/calcurse "$@"
-```
 
-Then just call that wrapper script instead of calcurse (or `alias calcurse=calcurse_wrapper`)
-
-In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`.
+In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`, where it stores data for `gcal_index`.
 
 ---
 
@@ -48,7 +46,13 @@ The `gcal` calcurse hook tries to read any `gcal_index`-created JSON files in th
 
 ---
 
-The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations (`~/.config/todo/todo.txt`, `~/.todo/todo.txt` (or specify with the `TODOTXT_FILE` environment variable)).
+The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations:
+
+- `$TODOTXT_FILE`
+- `$TODO_DIR/todo.txt`
+- `$XDG_CONFIG/todo/todo.txt`
+- `~/.config/todo/todo.txt`
+- `~/.todo/todo.txt`
 
 If you wanted to disable one of the `todotxt` or `gcal` extension, you could remove or rename the corresponding scripts in the `hooks` directory.
 

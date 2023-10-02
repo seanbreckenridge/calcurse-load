@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 readonly CALCURSE_LOAD_DATA="${XDG_DATA_HOME:-$HOME/.local/share}/calcurse_load"
 readonly GCAL_DIR="${CALCURSE_LOAD_DATA}/gcal"
