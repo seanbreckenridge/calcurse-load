@@ -66,10 +66,7 @@ def create_calcurse_event(event_data: Json, notes_dir: Path) -> Optional[Calcurs
     """
     note_hash: str = create_calcurse_note(event_data, notes_dir)
     if event_data["start"] is None:
-        # TODO: use logger instead?
-        print(
-            f"Event {event_data} has no start time", file=sys.stderr
-        )
+        print(f"Event {event_data} has no start time", file=sys.stderr)
         return None
     start_str = create_calcurse_timestamp(event_data["start"])
     end_str = create_calcurse_timestamp(event_data["end"])
@@ -118,7 +115,10 @@ class gcal_ext(Extension):
         google_apts: List[CalcurseApt] = [
             ev for ev in map(calcurse_func, self.load_json_events()) if ev is not None
         ]
-        print(f"Writing {len(google_apts)} gcal events to calcurse appointments file", file=sys.stderr)
+        print(
+            f"Writing {len(google_apts)} gcal events to calcurse appointments file",
+            file=sys.stderr,
+        )
         with (self.config.calcurse_dir / "apts").open("w") as cal_apts:
             for event in filtered_apts + google_apts:
                 cal_apts.write(event)
