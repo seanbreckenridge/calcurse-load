@@ -184,4 +184,3 @@ As another example, to use it with the gcal extension, you could also provide th
 ```bash
 python3 -m calcurse_load --pre-load calcurse_load.ext.gcal.gcal_ext
 ```
-
