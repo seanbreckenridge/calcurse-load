@@ -31,18 +31,3 @@ def get_configuration() -> Configuration:
         calcurse_dir=calcurse_dir,
         calcurse_load_dir=calcurse_load_dir,
     )
-
-
-# so that eval "$(calcurse_load --shell)" can be called,
-# to get the config values from the hooks
-def eval_shell_configuration() -> str:
-    conf = get_configuration()
-    return "\n".join(
-        [
-            f'{envvar}="{val}"'
-            for envvar, val in zip(
-                ("CALCURSE_DIR", "CALCURSE_LOAD_DIR"),
-                (conf.calcurse_dir, conf.calcurse_load_dir),
-            )
-        ]
-    )

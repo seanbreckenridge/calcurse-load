@@ -1,6 +1,4 @@
-## calcurse-load
-
-Personal hooks/scripts for calcurse. This integrates [`calcurse`](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
+Hooks/scripts for loading data data for calcurse. This integrates [`calcurse`](https://github.com/lfos/calcurse) with Google Calendar, and [`todo.txt`](http://todotxt.org/).
 
 - pre-load:
   - Looks at the locally indexed Google Calendar JSON dump, adds events as `calcurse` appointments; adds summary/HTML links as appointment notes.
@@ -35,7 +33,11 @@ alias calcurse='calcurse --datadir "$CALCURSE_DIR" --confdir ~/.config/calcurse 
 
 In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`, where it stores data for `gcal_index`.
 
----
+## About
+
+If you wanted to disable one of the `todotxt` or `gcal` extensions, you could remove or rename the corresponding scripts in the `hooks` directory.
+
+## gcal pre-load
 
 The `gcal` calcurse hook tries to read any `gcal_index`-created JSON files in the `$XDG_DATA_HOME/calcurse_load/gcal/` directory. If there's description/extra information for events from Google Calendar, this attaches corresponding notes to each calcurse event. Specifically, it:
 
@@ -44,19 +46,7 @@ The `gcal` calcurse hook tries to read any `gcal_index`-created JSON files in th
 - Generates Google Calendar events from the JSON
 - Adds the newly created events and writes back to the appointments file.
 
----
-
-The `post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations:
-
-- `$TODOTXT_FILE`
-- `$TODO_DIR/todo.txt`
-- `$XDG_CONFIG/todo/todo.txt`
-- `~/.config/todo/todo.txt`
-- `~/.todo/todo.txt`
-
-If you wanted to disable one of the `todotxt` or `gcal` extension, you could remove or rename the corresponding scripts in the `hooks` directory.
-
-### Google Calendar Update Process
+### gcal update example
 
 `gcal_index` saves an index of Google Calendar events for a Google Account locally as a JSON file.
 
@@ -88,6 +78,16 @@ Prints the JSON dump to STDOUT; example:
 
 For an example script one might put under cron, see [`example_update_google_cal`](./example_update_google_cal)
 
+## todotxt
+
+The `pre-load`/`post-save` `todotxt` hook converts the `calcurse` todos back to `todotxt` todos, and updates the `todotxt` file if any todos were added. A `todo.txt` is searched for in one of the common locations:
+
+- `$TODOTXT_FILE`
+- `$TODO_DIR/todo.txt`
+- `$XDG_CONFIG/todo/todo.txt`
+- `~/.config/todo/todo.txt`
+- `~/.todo/todo.txt`
+
 ### Todo.txt Priority Conversion
 
 | Todo.txt | Calcurse |
@@ -116,4 +116,40 @@ required arguments:
   --post-save  Execute the postsave action for the extension
 ```
 
-If you want to use this for other purposes; I defined a `Extension` base class in `calcurse_load.ext.abstract`, you'd just have to add a subclass in a file there, and then add it to the dictionary in `calcurse_load.ext`
+If you want to use this for other purposes; there is a `Extension` base class in `calcurse_load.ext.abstract`.
+
+To load a custom extension, you can point this at the fully
+qualified name of the extension class. For example, if you have a module
+called `my_custom_calcurse` installed into your python environment, and
+inside that module you have a class called `MyCustomExtension`, you can
+load that extension by passing `my_custom_calcurse.MyCustomExtension` to
+the `--pre-load` or `--post-save` options.
+
+For example to use it with the gcal extension, you could provide the fully qualified path:
+
+```
+python3 -m calcurse_load --pre-load calcurse_load.ext.gcal.gcal_ext
+```
+
+This should also work with relative paths, so for example you could put that extension in a `myextension.py` file in your calcurse configuration directory:
+
+```
+.
+├── gcal.enabled
+├── myextension.py
+├── post-save
+├── pre-load
+└── todotxt.enabled
+
+1 directory, 5 files
+```
+
+Then, at the top of your `pre-load`/`post-save`, just be sure to change the directory to the current one, like:
+
+```
+#!/bin/sh
+
+cd "$(dirname "$0")" || exit 1
+```
+
+And then you could define your `CustomExtension` in `myextension.py`, and use it like `python3 -m calcurse_load --pre-load myextension.CustomExtension`
