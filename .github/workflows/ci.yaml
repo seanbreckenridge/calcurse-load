@@ -31,4 +31,4 @@ jobs:
           pytest
       - name: Run flake8
         run: |
-          flake8 ./autotui ./gcal_index
+          flake8 ./calcurse_load ./gcal_index
