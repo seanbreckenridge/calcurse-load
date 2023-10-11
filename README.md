@@ -104,16 +104,17 @@ Probably won't use `calcurse_load` directly except for testing, the `pre-load`/`
 `calcurse_load` accepts either a flag to signify pre/post hook, and an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
 
 ```
-usage: calcurse_load (--pre-load|--post-save) (gcal|todotxt)...
+Usage: calcurse_load [OPTIONS]
 
-Load extra data into calcurse
+  A CLI for loading data for calcurse
 
-optional arguments:
-  -h, --help   show this help message and exit
-
-required arguments:
-  --pre-load   Execute the preload action for the extension
-  --post-save  Execute the postsave action for the extension
+Options:
+  --pre-load gcal|todotxt|custom.module.name.Extension
+                                  Execute the preload action for the extension
+  --post-save gcal|todotxt|custom.module.name.Extension
+                                  Execute the postsave action for the
+                                  extension
+  --help                          Show this message and exit.
 ```
 
 If you want to use this for other purposes; there is a `Extension` base class in `calcurse_load.ext.abstract`.
@@ -127,13 +128,13 @@ the `--pre-load` or `--post-save` options.
 
 For example to use it with the gcal extension, you could provide the fully qualified path:
 
-```
+```bash
 python3 -m calcurse_load --pre-load calcurse_load.ext.gcal.gcal_ext
 ```
 
-This should also work with relative paths, so for example you could put that extension in a `myextension.py` file in your calcurse configuration directory:
+This also works with relative paths, so for example you could put that extension in a `myextension.py` file in your hooks directory:
 
-```
+```bash
 .
 ├── gcal.enabled
 ├── myextension.py
@@ -144,12 +145,36 @@ This should also work with relative paths, so for example you could put that ext
 1 directory, 5 files
 ```
 
-Then, at the top of your `pre-load`/`post-save`, just be sure to change the directory to the current one, like:
+As an example:
 
+```python
+import os
+from calcurse_load.ext.abstract import Extension
+
+
+class Notifier(Extension):
+    """
+    Sends a notification letting you know how many appointments were loaded
+    """
+
+    def pre_load(self):
+        appointments = self.config.calcurse_dir / "apts"
+        with open(appointments, "r") as f:
+            lines = [l for l in f.readlines() if l.strip()]
+
+        os.system(f"notify-send 'Loaded {len(lines)} appointments'")
+
+    def post_save(self):
+        # do nothing
+        pass
 ```
+
+Then, for example, at the top of your `pre-load`, just be sure to change the directory to the current one, and call your custom extension:
+
+```bash
 #!/bin/sh
 
 cd "$(dirname "$0")" || exit 1
-```
 
-And then you could define your `CustomExtension` in `myextension.py`, and use it like `python3 -m calcurse_load --pre-load myextension.CustomExtension`
+python3 -m calcurse_load --pre-load myextension.Notifier
+```

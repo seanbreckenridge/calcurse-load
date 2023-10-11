@@ -24,9 +24,11 @@ def _load_extension(name: str) -> Extension:
         module_name, class_name = name.rsplit(".", 1)
         module = importlib.import_module(module_name)
         extclass = getattr(module, class_name)
-        assert issubclass(extclass, Extension)
+        assert issubclass(
+            extclass, Extension
+        ), f"{extclass} is not a subclass of Extension"
         ext = extclass(config=config)
-        assert isinstance(ext, Extension)
+        assert isinstance(ext, Extension), f"{ext} is not an instance of Extension"
         return ext
 
 
