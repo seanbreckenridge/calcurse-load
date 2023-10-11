@@ -57,10 +57,8 @@ def cli(
     A CLI for loading data for calcurse
     """
     for ext in pre_load:
-        click.echo(f"Loading {ext}")
         ext.pre_load()
     for ext in post_save:
-        click.echo(f"Saving {ext}")
         ext.post_save()
 
 

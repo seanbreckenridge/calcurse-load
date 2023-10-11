@@ -10,6 +10,8 @@ This doesn't write back to Google Calendar, its only used to source events.
 
 Should be mentioned that deleting a todo in calcurse does nothing, because the corresponding `todotxt` still exists. Only reason for me to load my todos into `calcurse` is to remind me what they are, and to possibly add new ones. I have [other ways](https://sean.fish/d/todo-prompt?dark) I mark todos as done.
 
+Other than the extensions provided here, you can also define completely custom behaviour by creating your own extensions, see [extension reference](#calcurse_load-reference)
+
 ## Setup
 
 ```bash
@@ -97,11 +99,11 @@ The `pre-load`/`post-save` `todotxt` hook converts the `calcurse` todos back to 
 | (C)      | 7 - 9    |
 | None     | 0        |
 
-### calcurse_load reference
+## calcurse_load reference
 
-Probably won't use `calcurse_load` directly except for testing, the `pre-load`/`post-save` hooks automatically call out to the corresponding scripts.
+`calcurse_load` accepts one, or multiple pre/post hooks, with an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
 
-`calcurse_load` accepts either a flag to signify pre/post hook, and an extension name. There are individual [`hooks`](./hooks) for for each extension (`gcal`/`todotxt`)
+You could instead just add the single line you want into your `pre-load` script, like: `python3 -m calcurse_load --pre-load todotxt --pre-load gcal`
 
 ```
 Usage: calcurse_load [OPTIONS]
@@ -119,20 +121,11 @@ Options:
 
 If you want to use this for other purposes; there is a `Extension` base class in `calcurse_load.ext.abstract`.
 
-To load a custom extension, you can point this at the fully
-qualified name of the extension class. For example, if you have a module
-called `my_custom_calcurse` installed into your python environment, and
-inside that module you have a class called `MyCustomExtension`, you can
-load that extension by passing `my_custom_calcurse.MyCustomExtension` to
-the `--pre-load` or `--post-save` options.
+To load a custom extension, you can point this at the fully qualified path to an Extension (module name + class name). This works with both absolute and relative imports.
 
-For example to use it with the gcal extension, you could provide the fully qualified path:
+### Relative
 
-```bash
-python3 -m calcurse_load --pre-load calcurse_load.ext.gcal.gcal_ext
-```
-
-This also works with relative paths, so for example you could put that extension in a `myextension.py` file in your hooks directory:
+With relative paths, the easiest way is to put the extension in a `myextension.py` file in your hooks directory:
 
 ```bash
 .
@@ -178,3 +171,17 @@ cd "$(dirname "$0")" || exit 1
 
 python3 -m calcurse_load --pre-load myextension.Notifier
 ```
+
+### Absolute
+
+If you had a wrote your own package and like `my_custom_calcurse` installed into your python environment, and
+inside that file you have a class called `MyCustomExtension`, you can
+load that extension by passing `my_custom_calcurse.MyCustomExtension` to
+the `--pre-load` or `--post-save` options.
+
+As another example, to use it with the gcal extension, you could also provide the fully qualified path:
+
+```bash
+python3 -m calcurse_load --pre-load calcurse_load.ext.gcal.gcal_ext
+```
+
