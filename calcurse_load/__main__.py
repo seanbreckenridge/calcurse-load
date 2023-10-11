@@ -56,6 +56,10 @@ def cli(
     """
     A CLI for loading data for calcurse
     """
+    if not pre_load and not post_save:
+        click.echo("No extensions specified", err=True)
+        click.echo(click.get_current_context().get_help())
+        exit(1)
     for ext in pre_load:
         ext.pre_load()
     for ext in post_save:
