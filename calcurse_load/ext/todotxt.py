@@ -1,6 +1,5 @@
 import os
 import re
-import warnings
 from pathlib import Path
 from typing import Optional, Iterator, List, Set
 from functools import lru_cache
@@ -111,7 +110,7 @@ class todotxt_ext(Extension):
         # search common locations
         todo_file: Optional[Path] = self._find_todo_file()
         if todo_file is None:
-            warnings.warn("Could not find todo.txt file in expected locations")
+            self.logger.warning("Could not find todo.txt file in expected locations")
             return
         # read in todo.txt items
         todos: List[TodoTxtTodo] = list(self._read_todotxt_file(todo_file))
@@ -133,7 +132,7 @@ class todotxt_ext(Extension):
         )
         todo_file: Optional[Path] = self._find_todo_file()
         if todo_file is None:
-            warnings.warn("Could not find todo.txt file in expected locations")
+            self.logger.warning("Could not find todo.txt file in expected locations")
             return
         # read in todo.txt items, save a set of the text descriptions, so we can compare
         # to the newly saved calcurse todos.
