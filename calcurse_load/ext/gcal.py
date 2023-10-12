@@ -127,11 +127,14 @@ class gcal_ext(Extension):
             f"Writing {len(google_apts)} gcal events to calcurse appointments file"
         )
 
+        events = filtered_apts + google_apts
+        try:
+            events.sort(key=lambda x: datetime.strptime(x[:10], "%m/%d/%Y"))
+        except Exception as e:
+            self.logger.error(f"Error sorting events: {e}")
+
         buf = io.StringIO()
-        for event in filtered_apts:
-            buf.write(event)
-            buf.write("\n")
-        for event in google_apts:
+        for event in events:
             buf.write(event)
             buf.write("\n")
 
