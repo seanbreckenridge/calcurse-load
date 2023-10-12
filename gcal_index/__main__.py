@@ -3,11 +3,11 @@ import os
 import json
 import click
 from itertools import chain
-from typing import Iterator, Any, Dict, Optional, Union, List
+from typing import Iterator, Any, Dict, Optional, Union, List, TypedDict
 from datetime import date, timedelta, datetime
 
 from lxml import html  # type: ignore[import]
-from gcsa.event import Event  # type: ignore[import]
+from gcsa.event import Event, Attendee  # type: ignore[import]
 from gcsa.google_calendar import GoogleCalendar  # type: ignore[import]
 
 home = os.path.expanduser("~")
@@ -15,6 +15,24 @@ home = os.path.expanduser("~")
 default_credential_file = os.path.join(home, ".credentials", "credentials.json")
 
 Json = Dict[str, Any]
+
+
+class AttendeeDict(TypedDict):
+    email: str
+    response_status: str
+
+
+class GcalAppointmentData(TypedDict):
+    summary: str
+    start: Optional[int]
+    end: Optional[int]
+    event_id: str
+    description: Json
+    location: str
+    recurrence: List[str]
+    attendees: List[AttendeeDict]
+    event_link: Any
+
 
 ATTENDEE_KEYS = ["email", "response_status"]
 
@@ -66,7 +84,26 @@ def _serialize_dateish(d: Optional[Union[date, datetime]]) -> Optional[int]:
         return int(datetime.combine(d, datetime.min.time()).timestamp())
 
 
-def event_to_dict(e: Event) -> Json:
+def _parse_attendies(
+    e: Union[Attendee, str, List[Attendee], List[str]]
+) -> List[AttendeeDict]:
+    if isinstance(e, Attendee):
+        att = []
+        for key in ATTENDEE_KEYS:
+            val = getattr(e, key)
+            if not val:
+                continue
+            att.append({key: val})
+        return att
+    elif isinstance(e, str):
+        return [{"email": e, "response_status": "accepted"}]
+    elif isinstance(e, list):
+        return list(chain(*[_parse_attendies(a) for a in e]))
+    else:
+        raise ValueError(f"Unexpected type for attendee: {type(e)}")
+
+
+def event_to_dict(e: Event) -> GcalAppointmentData:
     return {
         "summary": e.summary,
         "start": _serialize_dateish(e.start),
@@ -75,9 +112,7 @@ def event_to_dict(e: Event) -> Json:
         "description": _parse_html_description(e.description),
         "location": e.location,
         "recurrence": e.recurrence,
-        "attendees": [
-            {key: getattr(att, key) for key in ATTENDEE_KEYS} for att in e.attendees
-        ],
+        "attendees": _parse_attendies(e.attendees),
         "event_link": e.other.get("htmlLink"),
     }
 
