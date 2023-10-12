@@ -88,13 +88,12 @@ def _parse_attendies(
     e: Union[Attendee, str, List[Attendee], List[str]]
 ) -> List[AttendeeDict]:
     if isinstance(e, Attendee):
-        att = []
-        for key in ATTENDEE_KEYS:
-            val = getattr(e, key)
-            if not val:
-                continue
-            att.append({key: val})
-        return att
+        return [
+            {
+                "email": e.email,
+                "response_status": e.response_status,
+            }
+        ]
     elif isinstance(e, str):
         return [{"email": e, "response_status": "accepted"}]
     elif isinstance(e, list):
