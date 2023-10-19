@@ -39,7 +39,7 @@ export CALCURSE_DIR="$HOME/Documents/calcurse"
 alias calcurse='calcurse --datadir "$CALCURSE_DIR" --confdir ~/.config/calcurse "$@"'
 ```
 
-In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load`, where it stores data for `gcal_index`.
+In addition to that, this maintains a data directory in `$XDG_DATA_HOME/calcurse_load` (you can overwrite this with `$CALCURSE_LOAD_DIR`), where it stores data for `gcal_index`.
 
 ## About
 
